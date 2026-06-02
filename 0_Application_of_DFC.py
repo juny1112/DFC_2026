@@ -74,10 +74,10 @@ SUMMARY_COLUMNS = [
     "ym",
     "status",
     "message",
-    "delta_t95_event_N",
-    "delta_t95_event_mean_h",
-    "delta_t95_event_std_h",
-    "delta_t95_event_sum_h",
+    "N_DFC_event",
+    "DFC_event_mean_h",
+    "DFC_event_std_h",
+    "DFC_event_sum_h",
 ]
 
 
@@ -606,10 +606,10 @@ def apply_dfc(data: pd.DataFrame, config: DFCConfig, collect_stats: bool = True)
     delays = pd.to_numeric(pd.Series([e["delay_hours"] for e in events], dtype="float64"), errors="coerce").dropna()
     event_n = int(len(delays))
     stats = {
-        "delta_t95_event_N": event_n,
-        "delta_t95_event_mean_h": float(delays.mean()) if event_n > 0 else 0.0,
-        "delta_t95_event_std_h": float(delays.std(ddof=1)) if event_n > 1 else 0.0,
-        "delta_t95_event_sum_h": float(delays.sum()) if event_n > 0 else 0.0,
+        "N_DFC_event": event_n,
+        "DFC_event_mean_h": float(delays.mean()) if event_n > 0 else 0.0,
+        "DFC_event_std_h": float(delays.std(ddof=1)) if event_n > 1 else 0.0,
+        "DFC_event_sum_h": float(delays.sum()) if event_n > 0 else 0.0,
     }
 
     # Final *_DFC.csv files should contain only the resulting profile/data columns.
@@ -659,10 +659,10 @@ def _worker(args: tuple[str, str, DFCConfig, bool]) -> dict:
             "ym": ym,
             "status": "skip_existing",
             "message": "output already exists",
-            "delta_t95_event_N": 0,
-            "delta_t95_event_mean_h": 0.0,
-            "delta_t95_event_std_h": 0.0,
-            "delta_t95_event_sum_h": 0.0,
+            "N_DFC_event": 0,
+            "DFC_event_mean_h": 0.0,
+            "DFC_event_std_h": 0.0,
+            "DFC_event_sum_h": 0.0,
         }
     try:
         return run_dfc_pipeline_on_file(input_path, output_path, config)
@@ -674,10 +674,10 @@ def _worker(args: tuple[str, str, DFCConfig, bool]) -> dict:
             "ym": ym,
             "status": "error",
             "message": str(exc),
-            "delta_t95_event_N": 0,
-            "delta_t95_event_mean_h": 0.0,
-            "delta_t95_event_std_h": 0.0,
-            "delta_t95_event_sum_h": 0.0,
+            "N_DFC_event": 0,
+            "DFC_event_mean_h": 0.0,
+            "DFC_event_std_h": 0.0,
+            "DFC_event_sum_h": 0.0,
         }
 
 
