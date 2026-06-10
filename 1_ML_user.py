@@ -205,7 +205,7 @@ def fit_and_plot_userlevel(df_for_fit: pd.DataFrame, out_dir: Path,
     ax.set_ylim(y_min - pad_y, y_max + pad_y)
 
     # Fig.2(a)처럼 축 라벨 문구/스타일 맞춤 (t_100 -> t_FC 반영)
-    ax.set_xlabel("N(DFC)/month", fontsize=6)
+    ax.set_xlabel(r"$N(\mathrm{DFC})$/month", fontsize=6)
     ax.set_ylabel(r"AVG($\Delta t_{\mathrm{FC}}$)/month (h)", fontsize=6)
     ax.xaxis.labelpad = 1.0
     ax.yaxis.labelpad = 1.0
@@ -225,6 +225,8 @@ def fit_and_plot_userlevel(df_for_fit: pd.DataFrame, out_dir: Path,
     safe_savefig(fig, plot_path, dpi=300, bbox_inches="tight")
     pdf_path = plot_path.with_suffix(".pdf")
     safe_savefig(fig, pdf_path, dpi=300, bbox_inches="tight")
+    svg_path = plot_path.with_suffix(".svg")
+    safe_savefig(fig, svg_path, bbox_inches="tight")
     plt.close(fig)
 
 

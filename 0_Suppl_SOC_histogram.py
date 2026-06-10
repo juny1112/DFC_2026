@@ -136,6 +136,8 @@ def plot_minsoc_halfwidth(minima: np.ndarray, out_base: str) -> None:
     fig.tight_layout(pad=0.4)
     fig.savefig(out_base + ".png", dpi=DPI, bbox_inches="tight")
     fig.savefig(out_base + ".pdf", dpi=DPI, bbox_inches="tight")
+    fig.savefig(out_base + ".svg")
+
     plt.close(fig)
     print(f"[SAVE] {out_base}.png / {out_base}.pdf")
 

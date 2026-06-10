@@ -507,6 +507,7 @@ def make_figure_weekly_examples():
     base = os.path.join(BASE_OUT, "Figure2")
     fig.savefig(base + ".png", dpi=300)
     fig.savefig(base + ".pdf", dpi=300)
+    fig.savefig(base + ".svg")
 
     plt.close(fig)
     print(f"[SAVE] {base}.png / {base}.pdf")

@@ -4,7 +4,7 @@
 Unified DFC pipeline
 ====================
 Input  : non-DFC CSV file(s)
-Output : DFC-applied CSV file(s) + optional event summary CSV
+Output : DFC CSV file(s) + optional event summary CSV
 
 Pipeline:
   non-DFC CSV
@@ -145,7 +145,8 @@ def output_name_for_input(path: str | Path, suffix: str = "_DFC") -> str:
 # -----------------------------------------------------------------------------
 # Step 1. Charging/rest parsing
 # -----------------------------------------------------------------------------
-def prep_types_once(data: pd.DataFrame) -> pd.DataFrame:
+def normalize_input_types(data: pd.DataFrame) -> pd.DataFrame:
+    """Convert only the columns required by charging/rest parsing."""
     data = data.copy()
     if "time" not in data.columns:
         raise ValueError("missing required column: time")
@@ -154,42 +155,6 @@ def prep_types_once(data: pd.DataFrame) -> pd.DataFrame:
         if col in data.columns:
             data[col] = pd.to_numeric(data[col], errors="coerce")
     return data
-
-
-def fix_soc_zero(data: pd.DataFrame) -> pd.DataFrame:
-    """Correct short transient SOC=0 dropout segments using linear interpolation."""
-    data = data.copy()
-    if "soc" not in data.columns:
-        raise ValueError("missing required column: soc")
-
-    i = 0
-    n = len(data)
-    while i < n - 1:
-        if data.loc[i, "soc"] > 0.5 and data.loc[i + 1, "soc"] == 0:
-            start = i + 1
-            end = start
-            while end < n and data.loc[end, "soc"] == 0:
-                end += 1
-
-            if "pack_current" in data.columns:
-                data.loc[start:end - 1, "pack_current"] = 0
-
-            if end < n:
-                data.loc[start:end, "soc"] = np.linspace(
-                    data.loc[i, "soc"], data.loc[end, "soc"], end - i + 1
-                )[1:]
-                if "pack_volt" in data.columns:
-                    data.loc[start:end, "pack_volt"] = np.linspace(
-                        data.loc[i, "pack_volt"], data.loc[end, "pack_volt"], end - i + 1
-                    )[1:]
-        i += 1
-    return data
-
-
-def is_invalid_data(data: pd.DataFrame) -> bool:
-    dsoc = data["soc"].diff().abs()
-    dtime = data["time"].diff()
-    return bool(((dsoc >= 10) & (dtime >= pd.Timedelta(hours=12))).any())
 
 
 def parse_charging(data: pd.DataFrame) -> pd.DataFrame:
@@ -316,12 +281,8 @@ def parse_rest(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def parse_raw_non_dfc(data: pd.DataFrame) -> pd.DataFrame:
-    """Step 1 only: normalize columns needed for parsing, then parse charging/rest.
-
-    Transient SOC=0 correction and invalid-file screening are intentionally omitted
-    because preprocessing is assumed to have been completed upstream.
-    """
-    data = prep_types_once(data)
+    """Step 1 only: normalize required column types, then parse charging/rest."""
+    data = normalize_input_types(data)
     data = parse_charging(data)
     data = parse_rest(data)
     return data

@@ -433,6 +433,7 @@ def make_suppl_bad_intervention_8examples():
     base = os.path.join(BASE_OUT, "Suppl_Fig_Failure_SCI")
     fig.savefig(base + ".png", dpi=300, bbox_inches="tight")
     fig.savefig(base + ".pdf", dpi=300, bbox_inches="tight")
+    fig.savefig(base + ".svg")
 
     plt.close(fig)
     print(f"[SAVE] {base}.png / {base}.pdf")

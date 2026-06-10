@@ -398,6 +398,8 @@ def make_suppl_long_4users_3weeks_fullwidth():
     out_base = os.path.join(BASE_OUT, "Suppl_Fig_Long_SCI")
     fig.savefig(out_base + ".png", dpi=300, bbox_inches="tight")
     fig.savefig(out_base + ".pdf", dpi=300, bbox_inches="tight")
+    fig.savefig(out_base + ".svg")
+
     plt.close(fig)
     print(f"[SAVE] {out_base}.png / {out_base}.pdf")
 

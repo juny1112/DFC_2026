@@ -241,7 +241,7 @@ def plot_cluster_scatter_ax(ax, df_feat: pd.DataFrame):
     ax.set_ylim(y_min - pad_y, y_max + pad_y)
 
     # 축 라벨: x = N, y = AVG
-    ax.set_xlabel("N(DFC)", fontsize=6)
+    ax.set_xlabel(r"$N(\mathrm{DFC})$", fontsize=6)
     ax.set_ylabel(r"AVG($\Delta t_{\mathrm{FC}}$) (hours)", fontsize=6)
     ax.xaxis.labelpad = 1.0  # 라벨-숫자 간격 축소
     ax.yaxis.labelpad = 1.0
@@ -322,7 +322,7 @@ def plot_overlapped_hist_with_inset_ax(ax, df_t95, cfg_key="ALL"):
     )
 
     ax.set_ylabel("Count")
-    ax.set_xlabel(r"$t_{\mathrm{FC},m}$ (hours)")
+    ax.set_xlabel(r"$t_{\mathrm{FC},\mathrm{m}}$ (hours)")
     ax.xaxis.labelpad = 1.0
     ax.yaxis.labelpad = 1.0
 
@@ -408,7 +408,7 @@ def plot_overlapped_hist_with_inset_ax(ax, df_t95, cfg_key="ALL"):
             axins.set_ylim(0, inset_y)
 
         # x 레이블만 사용, y-label "Count"는 생략
-        axins.set_xlabel(r'$\Delta t_{\mathrm{FC},m}$ (hours)')
+        axins.set_xlabel(r"$\Delta t_{\mathrm{FC},\mathrm{m}}$ (hours)")
         # x축 라벨을 축에 더 붙게
         axins.xaxis.labelpad = 0.5
         # 숫자도 축에 더 붙게 pad 줄임
@@ -559,6 +559,7 @@ def make_figure2(merged, sub0, sub1, sub2, df_feat, out_dir):
     # 출판용 벡터(PDF) + 리뷰/슬라이드용 PNG 동시 저장
     fig.savefig(base + ".pdf", dpi=300)
     fig.savefig(base + ".png", dpi=300)
+    fig.savefig(base + ".svg")
 
     plt.close(fig)
     print(f"[SAVE] Figure 3 -> {base}.pdf / {base}.png")
